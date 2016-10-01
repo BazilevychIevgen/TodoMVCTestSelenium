@@ -2,7 +2,7 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.WebElement;
 
 import static core.ConciseAPI.*;
 import static core.CustomConditions.*;
@@ -46,9 +46,17 @@ public class TodoMVCPage {
         $(byLinkText("Completed")).click();
     }
 
-    public static void edit(String oldTaskText, String newTaskText) {
+    public static WebElement startEdit(String oldTaskText, String newTaskText) {
         doubleClick($(listElementWithExactText(tasks, oldTaskText), "label"));
-        setValue($(listElementWithCssClass(tasks, "editing"), ".edit"), newTaskText + Keys.ENTER);
+        return setValue($(listElementWithCssClass(tasks, "editing"), ".edit"), newTaskText);
+    }
+
+    public static void cancelEdit(String oldTaskText, String newTaskText) {
+       startEdit(oldTaskText,newTaskText+Keys.ESCAPE);
+    }
+
+    public static void edit(String oldTaskText, String newTaskText) {
+        startEdit(oldTaskText,newTaskText+Keys.ENTER);
     }
 
     public static void assertItemsLeft(int count) {
@@ -81,11 +89,6 @@ public class TodoMVCPage {
 
     public static void assertNoVisibleTasks() {
         assertSizeOfVisibleTasks(0);
-    }
-
-    public static void cancelEdit(String oldTaskText, String newTaskText) {
-        doubleClick($(listElementWithExactText(tasks, oldTaskText), "label"));
-        setValue($(listElementWithCssClass(tasks, "editing"), ".edit"), newTaskText + Keys.ESCAPE);
     }
 
 }
